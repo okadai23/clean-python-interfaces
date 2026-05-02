@@ -64,11 +64,25 @@ def lock(session: Session) -> None:
 def lint(session: Session) -> None:
     """Run linting with Ruff."""
     session.install("-c", constraints(session).as_posix(), "ruff")
+    session.run("ruff", "check")
+
+
+@nox.session(python=["3.13"], tags=["lint"])
+def lint_fix(session: Session) -> None:
+    """Run Ruff linting and apply safe fixes."""
+    session.install("-c", constraints(session).as_posix(), "ruff")
     session.run("ruff", "check", "--fix")
 
 
 @nox.session(python=["3.13"], tags=["format"])
 def format_code(session: Session) -> None:
+    """Check code formatting with Ruff."""
+    session.install("-c", constraints(session).as_posix(), "ruff")
+    session.run("ruff", "format", "--check")
+
+
+@nox.session(python=["3.13"], tags=["format"])
+def format_fix(session: Session) -> None:
     """Format code with Ruff."""
     session.install("-c", constraints(session).as_posix(), "ruff")
     session.run("ruff", "format")
@@ -76,6 +90,13 @@ def format_code(session: Session) -> None:
 
 @nox.session(python=["3.13"], tags=["sort"])
 def sort(session: Session) -> None:
+    """Check import sorting with Ruff."""
+    session.install("-c", constraints(session).as_posix(), "ruff")
+    session.run("ruff", "check", "--select", "I")
+
+
+@nox.session(python=["3.13"], tags=["sort"])
+def sort_fix(session: Session) -> None:
     """Sort imports with Ruff."""
     session.install("-c", constraints(session).as_posix(), "ruff")
     session.run("ruff", "check", "--select", "I", "--fix")
@@ -99,6 +120,36 @@ def test(session: Session) -> None:
 
     session.install("-c", constraints(session).as_posix(), ".[dev]")
     session.run("pytest", "--cov=src", f"--cov-fail-under={COVER_MIN}")
+
+
+@nox.session(python=["3.13"], tags=["test"])
+def test_unit(session: Session) -> None:
+    """Run unit tests."""
+    session.install("-c", constraints(session).as_posix(), ".[dev]")
+    session.run("pytest", "tests/unit")
+
+
+@nox.session(python=["3.13"], tags=["test"])
+def test_e2e(session: Session) -> None:
+    """Run end-to-end tests."""
+    session.install("-c", constraints(session).as_posix(), ".[dev]")
+    session.run("pytest", "tests/e2e")
+
+
+@nox.session(python=["3.13"], tags=["test"])
+def coverage(session: Session) -> None:
+    """Run tests with a detailed coverage report."""
+    if not has_test_targets():
+        session.skip("No test targets found in src directory")
+
+    session.install("-c", constraints(session).as_posix(), ".[dev]")
+    session.run(
+        "pytest",
+        "--cov=src",
+        "--cov-report=term-missing",
+        "--cov-report=html",
+        f"--cov-fail-under={COVER_MIN}",
+    )
 
 
 @nox.session(python=["3.13"], tags=["security"])

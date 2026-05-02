@@ -1,0 +1,115 @@
+documents:
+  - path: README.md
+    type: curated
+    purpose: Project overview, setup, runtime commands, and main development commands.
+    update_when:
+      - package.json
+      - pyproject.toml
+      - noxfile.py
+      - scripts/**
+      - AGENTS.md
+      - .codex/**
+      - .agents/skills/**
+      - .claude/**
+    checks:
+      - links
+      - command-snippets
+
+  - path: AGENTS.md
+    type: curated
+    purpose: Persistent coding-agent working agreements and required checks.
+    update_when:
+      - package.json
+      - noxfile.py
+      - scripts/**
+      - harness/**
+      - .codex/**
+      - .agents/skills/**
+      - .github/**
+    checks:
+      - links
+
+  - path: docs/development/commands.md
+    type: generated
+    purpose: Package script inventory for humans and agents.
+    generator: npm run docs:commands
+    update_when:
+      - package.json
+    checks:
+      - generated
+
+  - path: docs/guides/environment.md
+    type: semi-generated
+    purpose: Runtime environment variable inventory and usage notes.
+    generator: npm run docs:env
+    update_when:
+      - docs/_meta/public-env-vars.yaml
+      - .env.example
+      - src/clean_interfaces/utils/settings.py
+    checks:
+      - generated
+      - links
+
+  - path: docs/api/overview.md
+    type: semi-generated
+    purpose: API and interface overview, including generated interface entrypoint inventory.
+    generator: npm run docs:usecases
+    update_when:
+      - src/clean_interfaces/interfaces/**
+      - src/clean_interfaces/app.py
+      - src/clean_interfaces/models/**
+    checks:
+      - generated
+      - links
+
+  - path: docs/development/agent-harness.md
+    type: curated
+    purpose: Coding-agent harness, skills, custom agents, and verification workflow.
+    update_when:
+      - AGENTS.md
+      - PLANS.md
+      - code_review.md
+      - .codex/**
+      - .agents/skills/**
+      - .claude/**
+      - harness/**
+      - scripts/harness/**
+    checks:
+      - links
+      - command-snippets
+
+  - path: docs/development/github-automation.md
+    type: curated
+    purpose: GitHub issue and pull request automation for agent maintenance work.
+    update_when:
+      - scripts/github/**
+      - .github/workflows/agent-maintenance-pr.yml
+      - .github/pull_request_template.md
+      - package.json
+    checks:
+      - links
+      - command-snippets
+
+  - path: docs/development/testing.md
+    type: curated
+    purpose: Test strategy and nox test commands.
+    update_when:
+      - noxfile.py
+      - tests/**
+      - pyproject.toml
+    checks:
+      - links
+      - command-snippets
+
+  - path: docs/about/changelog.md
+    type: curated
+    purpose: User-facing release history.
+    update_when:
+      - src/**
+      - tests/**
+      - docs/**
+      - package.json
+      - pyproject.toml
+      - noxfile.py
+    checks:
+      - links

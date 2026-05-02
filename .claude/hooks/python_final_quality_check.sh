@@ -5,13 +5,16 @@
 
 echo "Running final quality checks before stopping..."
 
+PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(pwd)}"
+cd "$PROJECT_DIR" || exit 2
+
 # Flag to track if any checks fail
 CHECKS_FAILED=false
 ERROR_MESSAGES=""
 
 # Run tests
 echo "Running tests..."
-TEST_OUTPUT=$(uv run nox -s test 2>&1)
+TEST_OUTPUT=$(uv run --extra dev nox -s test 2>&1)
 TEST_EXIT_CODE=$?
 if [ $TEST_EXIT_CODE -ne 0 ]; then
     CHECKS_FAILED=true
@@ -20,7 +23,7 @@ fi
 
 # Run linting
 echo "Running linting..."
-LINT_OUTPUT=$(uv run nox -s lint 2>&1)
+LINT_OUTPUT=$(uv run --extra dev nox -s lint 2>&1)
 LINT_EXIT_CODE=$?
 if [ $LINT_EXIT_CODE -ne 0 ]; then
     CHECKS_FAILED=true
@@ -29,7 +32,7 @@ fi
 
 # Run type checking
 echo "Running type checking..."
-TYPING_OUTPUT=$(uv run nox -s typing 2>&1)
+TYPING_OUTPUT=$(uv run --extra dev nox -s typing 2>&1)
 TYPING_EXIT_CODE=$?
 if [ $TYPING_EXIT_CODE -ne 0 ]; then
     CHECKS_FAILED=true

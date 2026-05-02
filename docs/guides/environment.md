@@ -143,3 +143,16 @@ LOG_LEVEL=DEBUG python -m clean_interfaces.main
 -   Learn about [Logging](logging.md) configuration options
 -   Explore the [REST API](restapi.md) environment variables
 -   See the [Configuration](../configuration.md) overview
+
+<!-- GENERATED:public-env-vars:start -->
+| Name | Required | Example/Default | Secret | Description |
+| --- | --- | --- | --- | --- |
+| `INTERFACE_TYPE` | no | `cli` | no | Interface adapter to run. Supported values are cli, restapi, and mcp. |
+| `LOG_LEVEL` | no | `INFO` | no | Logging level. |
+| `LOG_FORMAT` | no | `json` | no | Logging output format. |
+| `LOG_FILE_PATH` | no | `/tmp/clean-interfaces.log` | no | Optional local log file path. |
+| `OTEL_LOGS_EXPORT_MODE` | no | `file` | no | Deprecated OpenTelemetry log export mode retained for compatibility with older environment files. |
+| `OTEL_ENDPOINT` | no | `http://localhost:4317` | no | Deprecated OpenTelemetry collector endpoint retained for compatibility. |
+| `OTEL_SERVICE_NAME` | no | `clean-interfaces` | no | Deprecated OpenTelemetry service name retained for compatibility. |
+| `OTEL_EXPORT_TIMEOUT` | no | `30000` | no | Deprecated OpenTelemetry export timeout retained for compatibility. |
+<!-- GENERATED:public-env-vars:end -->

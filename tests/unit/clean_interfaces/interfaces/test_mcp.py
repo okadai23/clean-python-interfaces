@@ -1,5 +1,6 @@
 """Tests for MCP interface implementation."""
 
+from typing import Protocol, cast
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -7,6 +8,14 @@ from fastmcp import FastMCP
 
 from clean_interfaces.interfaces.base import BaseInterface
 from clean_interfaces.interfaces.mcp import MCPInterface
+
+
+class _ToolRegistry(Protocol):
+    """Typed subset of FastMCP used by these tests."""
+
+    async def get_tool(self, name: str) -> object | None:
+        """Return a registered MCP tool."""
+        ...
 
 
 class TestMCPInterface:
@@ -31,8 +40,8 @@ class TestMCPInterface:
     async def test_mcp_welcome_command(self) -> None:
         """Test MCP welcome command functionality."""
         mcp = MCPInterface()
-        tools = await mcp.mcp.get_tools()
-        assert "welcome" in tools
+        tool = await cast("_ToolRegistry", mcp.mcp).get_tool("welcome")
+        assert tool is not None
 
     @patch("fastmcp.FastMCP.run")
     def test_mcp_run_method(self, mock_run: MagicMock) -> None:

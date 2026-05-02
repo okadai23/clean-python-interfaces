@@ -1,0 +1,6 @@
+{
+  "tool_input": {
+    "command": "npm publish"
+  },
+  "expect": "deny"
+}

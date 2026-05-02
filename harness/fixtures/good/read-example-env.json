@@ -1,0 +1,6 @@
+{
+  "tool_input": {
+    "command": "sed -n '1,80p' .env.example"
+  },
+  "expect": "allow"
+}

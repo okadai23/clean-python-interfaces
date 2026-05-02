@@ -1,0 +1,6 @@
+{
+  "tool_input": {
+    "command": "cat .env"
+  },
+  "expect": "deny"
+}

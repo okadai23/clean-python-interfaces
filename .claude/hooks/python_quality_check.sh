@@ -6,8 +6,10 @@
 # Log that the hook was triggered
 echo "[HOOK] Python quality check hook triggered at $(date)" >> /tmp/claude_hook.log
 
-# Change to workspace directory
-cd /workspace
+PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(pwd)}"
+
+# Change to project directory
+cd "$PROJECT_DIR" || exit 0
 
 # Read the input JSON from stdin
 INPUT_JSON=$(cat)
@@ -30,7 +32,7 @@ echo "Debug: Extracted file path: $FILE_PATH" >&2
 if [ -z "$FILE_PATH" ] || [ "$FILE_PATH" = "null" ]; then
     echo "Debug: No specific file path found, checking for recent Python changes" >&2
     # Find Python files modified in the last minute
-    RECENT_PY_FILES=$(find /workspace -name "*.py" -type f -mmin -1 2>/dev/null | head -5)
+    RECENT_PY_FILES=$(find "$PROJECT_DIR" -name "*.py" -type f -mmin -1 2>/dev/null | head -5)
     if [ -n "$RECENT_PY_FILES" ]; then
         echo "Debug: Found recently modified Python files" >&2
         FILE_PATH="recent_python_files"
@@ -42,7 +44,7 @@ if [[ "$FILE_PATH" == *.py ]] || [ "$FILE_PATH" = "recent_python_files" ]; then
     echo "[HOOK] Running Python quality checks for: $FILE_PATH" >> /tmp/claude_hook.log
     echo "Running Python quality checks..." >&2
     
-    cd /workspace
+    cd "$PROJECT_DIR" || exit 0
     
     # Initialize error tracking
     ERRORS_FOUND=0
@@ -50,8 +52,8 @@ if [[ "$FILE_PATH" == *.py ]] || [ "$FILE_PATH" = "recent_python_files" ]; then
     
     # Run linting
     echo "Running Ruff linting..." >&2
-    echo "[HOOK] About to run: uv run nox -s lint" >> /tmp/claude_hook.log
-    LINT_OUTPUT=$(uv run nox -s lint 2>&1)
+    echo "[HOOK] About to run: uv run --extra dev nox -s lint" >> /tmp/claude_hook.log
+    LINT_OUTPUT=$(uv run --extra dev nox -s lint 2>&1)
     LINT_EXIT_CODE=$?
     echo "[HOOK] Lint exit code: $LINT_EXIT_CODE" >> /tmp/claude_hook.log
     
@@ -67,8 +69,8 @@ if [[ "$FILE_PATH" == *.py ]] || [ "$FILE_PATH" = "recent_python_files" ]; then
     
     # Run format check
     echo "Running code formatting check..." >&2
-    echo "[HOOK] About to run: uv run nox -s format_code" >> /tmp/claude_hook.log
-    FORMAT_OUTPUT=$(uv run nox -s format_code 2>&1)
+    echo "[HOOK] About to run: uv run --extra dev nox -s format_code" >> /tmp/claude_hook.log
+    FORMAT_OUTPUT=$(uv run --extra dev nox -s format_code 2>&1)
     FORMAT_EXIT_CODE=$?
     echo "[HOOK] Format exit code: $FORMAT_EXIT_CODE" >> /tmp/claude_hook.log
     
@@ -84,8 +86,8 @@ if [[ "$FILE_PATH" == *.py ]] || [ "$FILE_PATH" = "recent_python_files" ]; then
     
     # Run import sorting check
     echo "Running import sorting check..." >&2
-    echo "[HOOK] About to run: uv run nox -s sort" >> /tmp/claude_hook.log
-    SORT_OUTPUT=$(uv run nox -s sort 2>&1)
+    echo "[HOOK] About to run: uv run --extra dev nox -s sort" >> /tmp/claude_hook.log
+    SORT_OUTPUT=$(uv run --extra dev nox -s sort 2>&1)
     SORT_EXIT_CODE=$?
     echo "[HOOK] Sort exit code: $SORT_EXIT_CODE" >> /tmp/claude_hook.log
     
@@ -101,8 +103,8 @@ if [[ "$FILE_PATH" == *.py ]] || [ "$FILE_PATH" = "recent_python_files" ]; then
     
     # Run type checking
     echo "Running type checking..." >&2
-    echo "[HOOK] About to run: uv run nox -s typing" >> /tmp/claude_hook.log
-    TYPING_OUTPUT=$(uv run nox -s typing 2>&1)
+    echo "[HOOK] About to run: uv run --extra dev nox -s typing" >> /tmp/claude_hook.log
+    TYPING_OUTPUT=$(uv run --extra dev nox -s typing 2>&1)
     TYPING_EXIT_CODE=$?
     echo "[HOOK] Typing exit code: $TYPING_EXIT_CODE" >> /tmp/claude_hook.log
     

@@ -1,0 +1,23 @@
+name = "docs_researcher"
+description = "Read-only docs researcher that can use the OpenAI developer docs MCP when enabled."
+model = "gpt-5.5"
+model_reasoning_effort = "medium"
+sandbox_mode = "read-only"
+nickname_candidates = ["Research-A", "Research-B"]
+
+developer_instructions = """
+Use documentation sources to verify APIs, options, and version-specific behavior.
+Return concise findings with source references when available.
+Do not modify files.
+Do not read secrets.
+"""
+
+[mcp_servers.openaiDeveloperDocs]
+url = "https://developers.openai.com/mcp"
+startup_timeout_sec = 20
+tool_timeout_sec = 60
+
+[[skills.config]]
+path = '.agents/skills/doc-maintenance/SKILL.md'
+enabled = true
+

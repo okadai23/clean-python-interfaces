@@ -171,6 +171,10 @@ uv.lock
 .nox/
 coverage.xml
 htmlcov/
+.harness/
+.agent-maintenance/
+harness/failures.jsonl
+AGENTS.override.md
 
 # --- VS Code -----------------------------------------------
 .vscode/*        # except settings/launch/tasks

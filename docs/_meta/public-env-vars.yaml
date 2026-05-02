@@ -1,0 +1,56 @@
+variables:
+  - name: INTERFACE_TYPE
+    required: false
+    default: cli
+    example: restapi
+    description: Interface adapter to run. Supported values are cli, restapi, and mcp.
+    secret: false
+
+  - name: LOG_LEVEL
+    required: false
+    default: INFO
+    example: DEBUG
+    description: Logging level.
+    secret: false
+
+  - name: LOG_FORMAT
+    required: false
+    default: json
+    example: console
+    description: Logging output format.
+    secret: false
+
+  - name: LOG_FILE_PATH
+    required: false
+    default: ""
+    example: /tmp/clean-interfaces.log
+    description: Optional local log file path.
+    secret: false
+
+  - name: OTEL_LOGS_EXPORT_MODE
+    required: false
+    default: file
+    example: file
+    description: Deprecated OpenTelemetry log export mode retained for compatibility with older environment files.
+    secret: false
+
+  - name: OTEL_ENDPOINT
+    required: false
+    default: http://localhost:4317
+    example: http://localhost:4317
+    description: Deprecated OpenTelemetry collector endpoint retained for compatibility.
+    secret: false
+
+  - name: OTEL_SERVICE_NAME
+    required: false
+    default: clean-interfaces
+    example: clean-interfaces
+    description: Deprecated OpenTelemetry service name retained for compatibility.
+    secret: false
+
+  - name: OTEL_EXPORT_TIMEOUT
+    required: false
+    default: "30000"
+    example: "30000"
+    description: Deprecated OpenTelemetry export timeout retained for compatibility.
+    secret: false

@@ -1,0 +1,67 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/hook-dispatch.mjs .codex/hooks/prompt_secret_scan.py",
+            "timeout": 5,
+            "statusMessage": "Scanning prompt for possible secrets"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash|apply_patch|Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/hook-dispatch.mjs .codex/hooks/pre_tool_use_policy.py",
+            "timeout": 10,
+            "statusMessage": "Checking command and file operation policy"
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "matcher": "Bash|apply_patch|Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/hook-dispatch.mjs .codex/hooks/pre_tool_use_policy.py",
+            "timeout": 10,
+            "statusMessage": "Checking approval request policy"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "apply_patch|Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/hook-dispatch.mjs .codex/hooks/post_edit_policy.py",
+            "timeout": 30,
+            "statusMessage": "Checking edited files"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/hook-dispatch.mjs .codex/hooks/stop_quality_gate.py",
+            "timeout": 300,
+            "statusMessage": "Running final quality gate"
+          }
+        ]
+      }
+    ]
+  }
+}

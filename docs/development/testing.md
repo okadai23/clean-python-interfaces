@@ -9,7 +9,7 @@ We follow Test-Driven Development (TDD) principles:
 1. **Write tests first**: Define behavior before implementation
 2. **Red-Green-Refactor**: Fail, pass, improve
 3. **Test at multiple levels**: Unit, integration, and E2E
-4. **Maintain high coverage**: Minimum 80% code coverage
+4. **Maintain high coverage**: Meet the coverage threshold configured in `noxfile.py`
 
 ## Test Structure
 
@@ -29,18 +29,25 @@ tests/
 
 ```bash
 # Run all tests
-nox -s test
+uv run --extra dev nox -s test
 
 # Run specific test categories
-nox -s test_unit
-nox -s test_api
-nox -s test_e2e
+uv run --extra dev nox -s test_unit
+uv run --extra dev nox -s test_e2e
 
 # Run with coverage report
-nox -s coverage
+uv run --extra dev nox -s coverage
 
 # Run all quality checks
-nox -s ci
+uv run --extra dev nox -s ci
+```
+
+Agent-friendly aggregate checks are available through package scripts:
+
+```bash
+npm run verify:fast
+npm run verify
+npm run harness:diff-scope
 ```
 
 ### Using Pytest Directly

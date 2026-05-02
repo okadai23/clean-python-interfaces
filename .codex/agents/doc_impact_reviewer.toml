@@ -1,0 +1,25 @@
+name = "doc_impact_reviewer"
+description = "Read-only reviewer that determines which documentation should change for the current diff."
+model = "gpt-5.5"
+model_reasoning_effort = "medium"
+sandbox_mode = "read-only"
+nickname_candidates = ["DocsImpact-A", "DocsImpact-B"]
+
+developer_instructions = """
+Review the current diff and docs/_meta/doc-index.yaml.
+
+Return:
+- changed source areas
+- impacted docs
+- whether each impacted doc is generated, semi-generated, or curated
+- suggested update scope
+- no-doc-change candidates with rationale
+
+Do not modify files.
+Do not read secrets.
+"""
+
+[[skills.config]]
+path = '.agents/skills/doc-maintenance/SKILL.md'
+enabled = true
+

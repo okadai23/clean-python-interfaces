@@ -1,0 +1,6 @@
+{
+  "tool_input": {
+    "command": "rm -rf /"
+  },
+  "expect": "deny"
+}

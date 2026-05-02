@@ -1,0 +1,83 @@
+name: agent-maintenance-pr
+
+on:
+  workflow_dispatch:
+    inputs:
+      title:
+        description: "Issue and PR title"
+        required: true
+        default: "Agent harness maintenance"
+      labels:
+        description: "Comma-separated issue labels"
+        required: false
+        default: "agent,harness"
+      base:
+        description: "Base branch"
+        required: false
+        default: "main"
+      branch_prefix:
+        description: "Maintenance branch prefix"
+        required: false
+        default: "agent-fix"
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  create-issue-and-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "latest"
+
+      - name: Install dependencies
+        run: uv sync --extra dev --extra docs
+
+      - name: Configure git author
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Run safe generated maintenance
+        run: |
+          npm run docs:verify
+          npm run claude:check
+          npm run harness:test
+
+      - name: Build maintenance report
+        run: npm run github:report
+
+      - name: Create issue and PR when changes exist
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "No generated maintenance changes. Nothing to publish."
+            exit 0
+          fi
+          node scripts/github/create-issue-pr.mjs \
+            --confirm \
+            --title "${{ inputs.title }}" \
+            --pr-title "${{ inputs.title }}" \
+            --body-file .agent-maintenance/report.md \
+            --labels "${{ inputs.labels }}" \
+            --base "${{ inputs.base }}" \
+            --branch-prefix "${{ inputs.branch_prefix }}" \
+            --commit-message "chore: ${{ inputs.title }}"

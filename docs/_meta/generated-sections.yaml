@@ -1,0 +1,18 @@
+sections:
+  - id: package-commands
+    file: docs/development/commands.md
+    generator: npm run docs:commands
+    start: "<!-- GENERATED:package-commands:start -->"
+    end: "<!-- GENERATED:package-commands:end -->"
+
+  - id: public-env-vars
+    file: docs/guides/environment.md
+    generator: npm run docs:env
+    start: "<!-- GENERATED:public-env-vars:start -->"
+    end: "<!-- GENERATED:public-env-vars:end -->"
+
+  - id: interface-entrypoints
+    file: docs/api/overview.md
+    generator: npm run docs:usecases
+    start: "<!-- GENERATED:interface-entrypoints:start -->"
+    end: "<!-- GENERATED:interface-entrypoints:end -->"

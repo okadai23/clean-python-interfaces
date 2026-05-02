@@ -1,0 +1,143 @@
+#:schema https://developers.openai.com/codex/config-schema.json
+# Project-scoped Codex defaults for this harness.
+# Codex loads project .codex layers only after the project is trusted.
+
+model = "gpt-5.5"
+model_reasoning_effort = "medium"
+sandbox_mode = "workspace-write"
+approval_policy = "untrusted"
+allow_login_shell = false
+project_doc_max_bytes = 32768
+
+[features]
+codex_hooks = true
+multi_agent = true
+skill_mcp_dependency_install = true
+# Memories are useful for personal workflows, but keep the privacy guard on.
+memories = true
+
+[memories]
+use_memories = true
+generate_memories = true
+disable_on_external_context = true
+
+[sandbox_workspace_write]
+network_access = false
+exclude_slash_tmp = true
+exclude_tmpdir_env_var = true
+
+[shell_environment_policy]
+inherit = "core"
+exclude = [
+  "*KEY*",
+  "*SECRET*",
+  "*TOKEN*",
+  "*PASSWORD*",
+  "AWS_*",
+  "GITHUB_TOKEN",
+  "OPENAI_API_KEY",
+  "DATABASE_URL",
+]
+
+[agents]
+max_threads = 5
+max_depth = 1
+job_max_runtime_seconds = 1800
+
+[profiles.plan]
+sandbox_mode = "read-only"
+approval_policy = "on-request"
+model_reasoning_effort = "high"
+
+[profiles.conservative]
+sandbox_mode = "read-only"
+approval_policy = "untrusted"
+model_reasoning_effort = "medium"
+
+[profiles.development]
+sandbox_mode = "workspace-write"
+approval_policy = "on-request"
+model_reasoning_effort = "medium"
+
+[profiles.prototype]
+sandbox_mode = "workspace-write"
+approval_policy = "untrusted"
+model_reasoning_effort = "medium"
+
+[profiles.review]
+sandbox_mode = "read-only"
+approval_policy = "never"
+model_reasoning_effort = "high"
+
+[profiles.ci_readonly]
+sandbox_mode = "read-only"
+approval_policy = "never"
+model_reasoning_effort = "medium"
+
+[profiles.ci]
+sandbox_mode = "read-only"
+approval_policy = "never"
+model_reasoning_effort = "medium"
+
+# A named trusted profile is provided for explicit opt-in only.
+# Prefer development/prototype unless a workflow has its own containment.
+[profiles.trusted]
+sandbox_mode = "workspace-write"
+approval_policy = "never"
+model_reasoning_effort = "high"
+
+[agents.pr_explorer]
+description = "Map affected files, entry points, tests, and docs impact before implementation or review."
+config_file = "./agents/pr_explorer.toml"
+
+[agents.staff_plan_reviewer]
+description = "Review implementation plans for scope, assumptions, phase gates, and verification strategy."
+config_file = "./agents/staff_plan_reviewer.toml"
+
+[agents.bug_hunter]
+description = "Find correctness bugs, race conditions, regressions, and missing reproduction tests."
+config_file = "./agents/bug_hunter.toml"
+
+[agents.vibe_reviewer]
+description = "Review assumptions, simplicity, surgical diffs, and verifiable goals."
+config_file = "./agents/vibe_reviewer.toml"
+
+[agents.github_maintainer]
+description = "Plan safe GitHub Issue and Pull Request publication for agent maintenance fixes."
+config_file = "./agents/github_maintainer.toml"
+
+[agents.implementer]
+description = "Implement small Python changes with TDD, docs awareness, and repository verification."
+config_file = "./agents/implementer.toml"
+
+[agents.architecture_reviewer]
+description = "Review clean_interfaces module boundaries and dependency direction."
+config_file = "./agents/architecture_reviewer.toml"
+
+[agents.security_reviewer]
+description = "Review secret handling, unsafe commands, and security-sensitive diffs."
+config_file = "./agents/security_reviewer.toml"
+
+[agents.e2e_reviewer]
+description = "Review E2E and acceptance-level coverage for user-visible behavior."
+config_file = "./agents/e2e_reviewer.toml"
+
+[agents.doc_impact_reviewer]
+description = "Determine which documentation should change for the current diff."
+config_file = "./agents/doc_impact_reviewer.toml"
+
+[agents.doc_quality_reviewer]
+description = "Review documentation quality, generated sections, stale content, and secret leakage."
+config_file = "./agents/doc_quality_reviewer.toml"
+
+[agents.harness_reviewer]
+description = "Review hooks, rules, skills, custom agents, and harness safety."
+config_file = "./agents/harness_reviewer.toml"
+
+[agents.doc_writer]
+description = "Update documentation only, using generators for generated sections."
+config_file = "./agents/doc_writer.toml"
+
+[agents.technical_writer]
+description = "Review documentation drafts for clarity, accuracy, and onboarding quality."
+config_file = "./agents/technical_writer.toml"

@@ -32,10 +32,12 @@ This project uses `nox` as the task runner. Common development commands:
 ### Core Development Tasks
 
 -   `nox -s lint` - Run linting with Ruff
--   `nox -s format_code` - Format code with Ruff
--   `nox -s sort` - Sort imports with Ruff
+-   `nox -s format_code` - Check formatting with Ruff
+-   `nox -s format_fix` - Format code with Ruff
+-   `nox -s sort` - Check import sorting with Ruff
+-   `nox -s sort_fix` - Sort imports with Ruff
 -   `nox -s typing` - Run type checking with Pyright
--   `nox -s test` - Run tests with pytest and coverage (requires 80% minimum)
+-   `nox -s test` - Run tests with pytest and coverage (requires configured minimum)
 -   `nox -s security` - Run security checks (bandit, pip-audit)
 -   `nox -s docs` - Build documentation with MkDocs
 
@@ -119,7 +121,7 @@ project_root/
 
 1. The project uses template placeholders ({{PROJECT_NAME}}, {{LIBRARY_NAME}}, etc.) that are replaced during setup
 2. Library name is configured in `src/{library_name}/` and must be valid Python identifier
-3. Tests require 80% minimum coverage to pass
+3. Tests require the configured coverage minimum in `noxfile.py` to pass
 4. All code quality tools are configured to work together via nox
 
 ### Setup Process
@@ -400,7 +402,7 @@ line-ending = "auto"
 ### Testing Notes
 
 -   Tests are automatically skipped if no Python files exist in src directory
--   Coverage threshold is set to 80% minimum
+-   Coverage threshold is configured in `noxfile.py`
 -   Test configuration includes markers for slow and integration tests
 -   Use proper type hints in all test code
 
@@ -624,7 +626,7 @@ settings = Settings()
 -   [x] All Ruff checks passed: `nox -s lint`
 -   [x] All Pyright checks passed: `nox -s typing`
 -   [x] All tests passed: `nox -s test`
--   [x] Coverage above 80%: 99%
+-   [x] Coverage above configured threshold: 99%
 -   [x] No debug logs remain: `nox -s clean_debug`
 
 ### Debug Log Removal Confirmation
@@ -655,16 +657,16 @@ nox -s test_e2e      # Finally E2E tests
 
 # Quality checks - RUN AFTER EVERY CODE CHANGE
 nox -s lint          # Ruff linting - MANDATORY
-nox -s format_code   # Ruff formatting - MANDATORY
+nox -s format_code   # Ruff formatting check - MANDATORY
 nox -s typing        # Pyright type checking - MANDATORY
-nox -s coverage      # Coverage (80%+ required)
+nox -s coverage      # Coverage report and configured threshold
 nox -s clean_debug   # Debug code detection
 ```
 
 ### Pre-Pull Request Checklist
 
 -   [ ] All nox sessions pass
--   [ ] Test coverage is 80%+
+-   [ ] Test coverage meets the configured threshold
 -   [ ] Debug logs removed
 -   [ ] PROGRESS.md updated
 -   [ ] 3-layer tests (E2E/API/Unit) added for new features
@@ -700,7 +702,7 @@ nox -s test                                   # All tests at once
 # Quality checks - CONTINUOUS EXECUTION REQUIRED
 nox -s lint                                   # After every code change
 nox -s typing                                 # After every code change
-nox -s format_code                            # Code formatting
+nox -s format_code                            # Code formatting check
 nox -s coverage                               # Coverage check
 
 # Git operations

@@ -131,3 +131,12 @@ Most components are thread-safe for read operations. Write operations may requir
 -   Review the [Application](app.md) module for the main entry point
 -   Check [Interfaces](interfaces.md) for available interface types
 -   See [Utilities](utils.md) for helper functions
+
+<!-- GENERATED:interface-entrypoints:start -->
+- `src/clean_interfaces/interfaces/__init__.py`
+- `src/clean_interfaces/interfaces/base.py`
+- `src/clean_interfaces/interfaces/cli.py`
+- `src/clean_interfaces/interfaces/factory.py`
+- `src/clean_interfaces/interfaces/mcp.py`
+- `src/clean_interfaces/interfaces/restapi.py`
+<!-- GENERATED:interface-entrypoints:end -->

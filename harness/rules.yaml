@@ -1,0 +1,123 @@
+# Rule ledger for the failure-to-harness pipeline.
+# Keep this as the human-readable source of truth. Blocking behavior still needs
+# deterministic tests in `harness/fixtures` and review before promotion.
+
+promotion_policy:
+  - when: "severity == high and deterministic_detector_available == true"
+    promote_to: "blocking_hook"
+  - when: "recurrence_gte >= 2 and category == architecture_violation"
+    promote_to: "structural_lint_warn"
+  - when: "recurrence_gte >= 2 and category == knowledge_gap"
+    promote_to: "agents_md_or_skill"
+  - when: "recurrence_gte >= 3 and category == semantic_review"
+    promote_to: "reviewer_agent_warn"
+
+rules:
+  - id: CMD001
+    title: Block dangerous rm commands
+    category: unsafe_command
+    stage: pre_tool
+    severity: high
+    mode: block
+    detector:
+      type: regex
+      field: tool_input.command
+      pattern: '(^|[;&|]\s*)rm\s+-rf\s+(/|~|\$HOME|\.git|\*)'
+    message: |
+      CMD001: Dangerous recursive deletion is blocked.
+      Use a narrow cleanup script with an explicit target.
+
+  - id: CMD002
+    title: Block package publishing
+    category: unsafe_command
+    stage: pre_tool
+    severity: high
+    mode: block
+    detector:
+      type: regex
+      field: tool_input.command
+      pattern: '\b(npm|pnpm|yarn)\s+publish\b'
+    message: |
+      CMD002: Package publishing is blocked from Codex.
+      Draft release notes or a publish checklist instead.
+
+  - id: SEC001
+    title: Do not read secret-like files
+    category: secret_handling
+    stage: pre_tool
+    severity: high
+    mode: block
+    detector:
+      type: regex
+      field: tool_input.command
+      pattern: '(\.env|id_rsa|id_ed25519|\.pem|\.ssh|\.aws|secrets/)'
+    message: |
+      SEC001: Secret-like paths must not be read by Codex.
+      Use typed config schemas or documented dummy values.
+
+  - id: ARCH001
+    title: Inner clean_interfaces modules must not depend on outer layers
+    category: architecture_violation
+    stage: verification
+    severity: medium
+    mode: warn
+    detector:
+      type: import_boundary
+      from:
+        - "src/clean_interfaces/models/**"
+        - "src/clean_interfaces/utils/**"
+      disallow:
+        - "src/clean_interfaces/app.py"
+        - "src/clean_interfaces/main.py"
+        - "src/clean_interfaces/interfaces/**"
+    message: |
+      ARCH001: Models and utilities must not import the application root or inbound interfaces.
+      Keep interface-specific behavior in adapters and shared behavior in models or utilities.
+
+  - id: DOC001
+    title: Public behavior changes need doc impact review
+    category: docs_drift
+    stage: stop
+    severity: low
+    mode: warn
+    detector:
+      type: doc_index
+      path: docs/_meta/doc-index.yaml
+    message: |
+      DOC001: Run docs impact checks after public API, command, config, or architecture changes.
+
+  - id: BEH001
+    title: State assumptions before non-trivial coding
+    category: behavioral_guidance
+    stage: feedforward
+    severity: low
+    mode: guide
+    detector:
+      type: skill
+      skill: karpathy-guidelines
+    message: |
+      BEH001: For ambiguous or multi-file work, state assumptions and success criteria before implementation.
+
+  - id: BEH002
+    title: Prefer the simplest sufficient implementation
+    category: behavioral_guidance
+    stage: review
+    severity: low
+    mode: warn
+    detector:
+      type: reviewer_agent
+      agent: vibe_reviewer
+    message: |
+      BEH002: Avoid speculative abstractions, configurability, and features beyond the acceptance criteria.
+
+  - id: BEH003
+    title: Keep diffs surgical
+    category: maintainability
+    stage: verification
+    severity: medium
+    mode: warn
+    detector:
+      type: script
+      command: node scripts/harness/check-diff-scope.mjs
+    message: |
+      BEH003: Large or broad diffs need an explicit reason. Unrelated improvements should be reported, not silently applied.

@@ -45,8 +45,16 @@ clean-interfaces/
 │   └── e2e/                   # End-to-end tests
 ├── docs/                       # Documentation
 ├── constraints/                # Dependency constraints
+├── .agents/                    # Shared coding-agent skills
+├── .codex/                     # Codex project config, hooks, and custom agents
+├── .claude/                    # Claude Code native agents, commands, skills, and hooks
+├── harness/                    # Agent harness rules and failure ledger schema
+├── scripts/                    # Verification, docs, GitHub, and harness scripts
 ├── .env                       # Environment configuration (not in git)
 ├── .env.example               # Example environment configuration
+├── AGENTS.md                  # Coding-agent working agreements
+├── PLANS.md                   # Long-running plan and handoff template
+├── code_review.md             # Review checklist for agents
 ├── pyproject.toml             # Project configuration
 ├── noxfile.py                 # Task automation
 ├── CLAUDE.md                  # AI assistant instructions
@@ -134,13 +142,27 @@ uv run pre-commit install
 
 | Command              | Description         |
 | -------------------- | ------------------- |
-| `nox -s lint`        | Run code linting    |
-| `nox -s format_code` | Format code         |
+| `nox -s lint`        | Check code linting  |
+| `nox -s lint_fix`    | Apply Ruff lint fixes |
+| `nox -s format_code` | Check code format   |
+| `nox -s format_fix`  | Format code         |
 | `nox -s typing`      | Run type checking   |
 | `nox -s test`        | Run all tests       |
+| `nox -s test_unit`   | Run unit tests      |
+| `nox -s test_e2e`    | Run E2E tests       |
 | `nox -s security`    | Run security checks |
 | `nox -s docs`        | Build documentation |
 | `nox -s ci`          | Run all CI checks   |
+
+Agent-friendly aggregate commands are also available through `npm run` or `pnpm`:
+
+| Command | Description |
+| --- | --- |
+| `npm run verify:fast` | Lint, typecheck, architecture, unit tests, secret scan, harness tests, and diff scope |
+| `npm run verify` | Fast verification plus E2E and docs verification |
+| `npm run docs:verify` | Generate and validate documentation metadata |
+| `npm run harness:diff-scope` | Warn about overly broad working-tree diffs |
+| `npm run github:issue-pr:dry` | Dry-run GitHub issue and PR publication |
 
 ### Testing
 

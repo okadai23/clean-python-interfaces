@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Coding-agent harness with `AGENTS.md`, custom Codex and Claude agents, shared skills, harness rules, and verification scripts
+- Documentation metadata and generated sections for package commands, public environment variables, and interface entrypoints
+- GitHub automation scripts and workflows for documentation quality checks and agent maintenance pull requests
 - Initial project structure with `setup.sh` script
 - CLI interface using Typer
 - REST API interface using FastAPI
@@ -19,9 +22,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Documentation with MkDocs
 - Pre-commit hooks for code quality
 - GitHub Actions for CI/CD
-- Support for Python 3.12+
+- Support for Python 3.13+
 
 ### Changed
+- Standardized CI and local verification around Python 3.13, uv, nox, and `npm run verify:*`
 - Migrated from poetry to uv for dependency management
 - Updated all dependencies to latest stable versions
 

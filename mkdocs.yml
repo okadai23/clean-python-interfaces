@@ -52,6 +52,9 @@ nav:
       - Contributing: development/contributing.md
       - Testing: development/testing.md
       - Code Style: development/code-style.md
+      - Commands: development/commands.md
+      - Coding Agent Harness: development/agent-harness.md
+      - GitHub Automation: development/github-automation.md
   - About:
       - License: about/license.md
       - Changelog: about/changelog.md
@@ -71,4 +74,4 @@ extra:
   version:
     provider: mike
 
-copyright: Copyright &copy; 2025 Daisuke Okamoto 
+copyright: Copyright &copy; 2025 Daisuke Okamoto

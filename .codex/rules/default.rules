@@ -1,0 +1,78 @@
+# Command approval rules for Codex escalations.
+
+prefix_rule(
+    pattern = ["sudo"],
+    decision = "forbidden",
+    justification = "Privilege escalation is not allowed from Codex. Run required admin setup manually.",
+    match = ["sudo apt install git"],
+)
+
+prefix_rule(
+    pattern = ["rm", "-rf"],
+    decision = "forbidden",
+    justification = "Recursive force deletion is blocked. Use a narrow cleanup script with an explicit target.",
+    match = ["rm -rf build"],
+)
+
+prefix_rule(
+    pattern = ["git", "push", "--force"],
+    decision = "forbidden",
+    justification = "Force push is blocked from Codex.",
+    match = ["git push --force"],
+)
+
+prefix_rule(
+    pattern = ["npm", "publish"],
+    decision = "forbidden",
+    justification = "Package publishing is blocked from Codex.",
+    match = ["npm publish"],
+)
+
+prefix_rule(
+    pattern = ["pnpm", "publish"],
+    decision = "forbidden",
+    justification = "Package publishing is blocked from Codex.",
+    match = ["pnpm publish"],
+)
+
+prefix_rule(
+    pattern = ["curl"],
+    decision = "prompt",
+    justification = "External network access requires human review.",
+    match = ["curl https://example.com"],
+)
+
+prefix_rule(
+    pattern = ["wget"],
+    decision = "prompt",
+    justification = "External network access requires human review.",
+    match = ["wget https://example.com/file"],
+)
+
+prefix_rule(
+    pattern = ["npm", "run", "verify:fast"],
+    decision = "allow",
+    justification = "Fast quality gate is a standard verification command.",
+    match = ["npm run verify:fast"],
+)
+
+prefix_rule(
+    pattern = ["npm", "run", "verify"],
+    decision = "allow",
+    justification = "Full quality gate is a standard verification command.",
+    match = ["npm run verify"],
+)
+
+prefix_rule(
+    pattern = ["pnpm", "run", "verify:fast"],
+    decision = "allow",
+    justification = "Fast quality gate is a standard verification command.",
+    match = ["pnpm run verify:fast"],
+)
+
+prefix_rule(
+    pattern = ["pnpm", "run", "verify"],
+    decision = "allow",
+    justification = "Full quality gate is a standard verification command.",
+    match = ["pnpm run verify"],
+)

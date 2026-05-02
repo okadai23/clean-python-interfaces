@@ -100,6 +100,7 @@ ignore = [
      "EXE001",  # Shebang present but file not executable (Git permission sync issues)
      "EXE002",  # File is executable but no shebang (permission issues in container)
      "N802",  # Allow uppercase function names for HTTP handler methods (do_POST, do_GET)
+     "UP042",  # Keep str Enum compatibility without changing public enum bases
  ]
  # Allow fix for all enabled rules (when `--fix`) is provided.
 fixable = ["ALL"]
@@ -109,8 +110,22 @@ unfixable = []
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**/*.py" = ["S101", "PLR2004", "TRY003", "EM101"]
+"tests/**/*.py" = ["S101", "PLR2004", "TRY003", "EM101", "RUF100"]
 "tests/helpers/pexpect_debug.py" = ["T201", "TRY300"]
+"scripts/**/*.py" = ["COM812", "D103", "E501", "FURB167", "PLR2004", "T201"]
+".codex/hooks/*.py" = [
+    "COM812",
+    "D103",
+    "E501",
+    "FURB167",
+    "PERF401",
+    "PLR0911",
+    "PLW1510",
+    "PTH109",
+    "S603",
+    "T201",
+    "UP017",
+]
 
 [tool.ruff.format]
 # Like Black, use double quotes for strings.
@@ -161,4 +176,3 @@ dev = [
 ]
 
 # [dependency-groups] section removed - all dev dependencies are in [project.optional-dependencies.dev]
-
