@@ -5,7 +5,7 @@ from typing import Any
 import uvicorn
 import uvicorn.config
 from fastapi import FastAPI
-from fastapi.openapi.utils import get_openapi
+from fastapi.openapi.utils import get_openapi  # pyright: ignore[reportUnknownVariableType]
 from fastapi.responses import HTMLResponse, RedirectResponse
 
 from clean_interfaces.models.api import (

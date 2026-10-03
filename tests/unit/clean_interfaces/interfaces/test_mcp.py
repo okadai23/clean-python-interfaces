@@ -31,8 +31,8 @@ class TestMCPInterface:
     async def test_mcp_welcome_command(self) -> None:
         """Test MCP welcome command functionality."""
         mcp = MCPInterface()
-        tools = await mcp.mcp.get_tools()
-        assert "welcome" in tools
+        tools = await mcp.mcp.list_tools()
+        assert "welcome" in {tool.name for tool in tools}
 
     @patch("fastmcp.FastMCP.run")
     def test_mcp_run_method(self, mock_run: MagicMock) -> None:
