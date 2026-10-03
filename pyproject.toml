@@ -5,15 +5,15 @@ description = "A test project for verification"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "python-dotenv>=1.0.0",
-    "pydantic>=2.9.2",
-    "pydantic-settings>=2.9.1",
-    "pyyaml>=6.0.2",
-    "structlog>=24.1.0",
-    "fastapi>=0.116.1",
-    "uvicorn>=0.30.0",
-    "typer>=0.16.0",
-    "fastmcp>=2.12.2",
+    "python-dotenv>=1.2.4",
+    "pydantic>=2.13.5",
+    "pydantic-settings>=2.15.0",
+    "pyyaml>=6.0.3",
+    "structlog>=26.1.0",
+    "fastapi>=0.142.2",
+    "uvicorn>=0.54.0",
+    "typer>=0.27.2",
+    "fastmcp>=4.0.10",
 ] # Populated by user or later steps if needed
 
 [project.scripts]
@@ -21,30 +21,30 @@ clean-interfaces = "clean_interfaces.main:main"
 
 [project.optional-dependencies]
 docs = [
-    "sphinx>=8.1.2",
-    "mkdocs-material>=9.5.0",
+    "sphinx>=9.1.0",
+    "mkdocs-material>=9.7.7",
 ]
 dev = [
-    "nox>=2024.10.9",
-    "ruff>=0.6.9",
-    "pyright>=1.1.402",
-    "pip-audit>=2.7.1",
-    "pytest>=8.3.3",
-    "pytest-cov>=5.0.0",
-    "freezegun>=1.5.1",
-    "pytest-mock>=3.14.0",
-    "pytest-xdist>=3.5.0",
-    "responses>=0.25.3",
+    "nox>=2026.8.17",
+    "ruff>=0.16.10",
+    "pyright>=1.1.414",
+    "pip-audit>=2.10.1",
+    "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
+    "freezegun>=1.5.5",
+    "pytest-mock>=3.16.0",
+    "pytest-xdist>=3.8.0",
+    "responses>=0.26.3",
     "pexpect>=4.9.0",
-    "pytest-asyncio>=0.23.0",
-    "diff-cover>=8.0.0",
-    "commitizen>=3.20.0",
-    "python-semantic-release>=8.10.0",
-    "py-spy>=0.3.0",
-    "scalene>=1.5.0",
-    "hatch>=1.8.0",
-    "pdm>=2.12.0",
-    "pre-commit>=4.2.0",
+    "pytest-asyncio>=1.4.0",
+    "diff-cover>=10.6.0",
+    "commitizen>=4.19.0",
+    "python-semantic-release>=10.7.0",
+    "py-spy>=0.4.2",
+    "scalene>=2.3.0",
+    "hatch>=1.18.1",
+    "pdm>=2.29.2",
+    "pre-commit>=4.6.2",
 ]
 
 [tool.uv]
@@ -84,6 +84,7 @@ exclude = [
 line-length = 88
 indent-width = 4
 target-version = "py313"
+extend-exclude = ["*.md"]
 
 [tool.ruff.lint]
 select = ["ALL"]
@@ -97,9 +98,13 @@ ignore = [
      "BLE001",  # Broad exception handling needed for optional dependencies
      "PLC0415",  # Conditional imports needed for optional dependencies
      "TRY400",  # Use logger.error instead of logger.exception for structlog compatibility
+     "CPY001",  # Copyright headers are not required in this project
      "EXE001",  # Shebang present but file not executable (Git permission sync issues)
      "EXE002",  # File is executable but no shebang (permission issues in container)
      "N802",  # Allow uppercase function names for HTTP handler methods (do_POST, do_GET)
+     "PLR0917",  # Existing APIs intentionally accept more than five positional arguments
+     "RUF100",  # Keep compatibility-oriented noqa directives across Ruff versions
+     "UP042",  # Existing string enums retain their current Python enum behavior
  ]
  # Allow fix for all enabled rules (when `--fix`) is provided.
 fixable = ["ALL"]
@@ -161,4 +166,3 @@ dev = [
 ]
 
 # [dependency-groups] section removed - all dev dependencies are in [project.optional-dependencies.dev]
-
